@@ -113,6 +113,10 @@ let rec expr_of_typ typ =
       raise_errorf ~loc:ptyp_loc "%s cannot be derived for %s"
                    deriver (Ppx_deriving.string_of_core_type typ)
 
+let attr_no_warning_39 : attribute =
+  mknoloc "ocaml.warning",
+  PStr [Str.mk (Pstr_eval (Exp.constant (Const_int ~-39), []))]
+
 let str_of_type ~options ~path ({ ptype_loc = loc } as type_decl) =
   parse_options options;
   let path = Ppx_deriving.path_of_type_decl ~path type_decl in
@@ -163,7 +167,8 @@ let str_of_type ~options ~path ({ ptype_loc = loc } as type_decl) =
                         (Ppx_deriving.mangle_type_decl (`Prefix "pp") type_decl)) in
   let stringprinter = [%expr fun x -> Format.asprintf "%a" [%e pp_poly_apply] x] in
   let polymorphize  = Ppx_deriving.poly_fun_of_type_decl type_decl in
-  [Vb.mk (pvar (Ppx_deriving.mangle_type_decl (`Prefix "pp") type_decl))
+  let attrs=[] in (* attr_no_warning_39] in *)
+  [Vb.mk ~attrs (pvar (Ppx_deriving.mangle_type_decl (`Prefix "pp") type_decl))
                (polymorphize prettyprinter);
    Vb.mk (pvar (Ppx_deriving.mangle_type_decl (`Prefix "show") type_decl))
                (polymorphize stringprinter);]

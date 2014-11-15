@@ -1,3 +1,13 @@
+(* ocamlfind ppx_tools/rewriter
+  -ppx '_build/src/ppx_deriving_main.native  _build/src_plugins/ppx_deriving_show.cma'
+  src_examples/print_test.ml *)
+
+type direction =
+  | North
+  | South
+  | West
+  | East
+  [@@deriving show]
 
 type t =
   | Leaf of int
