@@ -38,16 +38,14 @@ let rec expr_of_typ ~self typ =
   | None, None ->
     match typ with
     | [%type: int] ->
-        (* TODO
         let low, high =
           match attr_range typ.ptyp_attributes with
-          | Some {pexp_descr=Pexp_tuple
-              [ {pexp_descr=Pexp_constant(Const_int x)};
-                {pexp_descr=Pexp_constant(Const_int y)}]} -> x,y
+          | Some {pexp_desc=Pexp_tuple
+              [ {pexp_desc=Pexp_constant(Const_int x)};
+                {pexp_desc=Pexp_constant(Const_int y)}]} -> x,y
+          | Some e -> raise_errorf ~loc:typ.ptyp_loc "bad attribute (expected int*int)"
           | None -> 0,100
         in
-        *)
-        let low, high = 0, 100 in
         [%expr fun st ->
           [%e  AC.int low] + Random.State.int st [%e AC.int (high-low)]
         ]
